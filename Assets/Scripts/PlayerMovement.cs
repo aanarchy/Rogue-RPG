@@ -1,32 +1,35 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+
+public enum PlayerState{
+        walk,
+        attack,
+        interact
+        }
 
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
-
     public Rigidbody2D rb;
-
-    Vector2 movement;
-
+    Vector2 change;
     public Animator a;
-    void Start()
-    {
 
+    void FixedUpdate()
+    {
+        change.x = Input.GetAxisRaw("Horizontal");
+        change.y = Input.GetAxisRaw("Vertical");
+        if (change != Vector2.zero) {
+            moveCharacter();
+            a.SetFloat("Horizontal", change.x);
+            a.SetFloat("Vertical", change.y);
+            a.SetBool("Moving", true);
+        } else {
+            a.SetBool("Moving", false); 
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void moveCharacter()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        a.SetFloat("Horizontal", movement.x);
-        a.SetFloat("Vertical", movement.y);
-        a.SetFloat("Speed", movement.sqrMagnitude);
-    }
-
-    private void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + movement.normalized * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + change.normalized * moveSpeed * Time.fixedDeltaTime);
     }
 }
