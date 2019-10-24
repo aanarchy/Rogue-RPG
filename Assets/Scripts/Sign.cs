@@ -10,6 +10,7 @@ public class Sign : MonoBehaviour
     public string dialogue;
     public bool playerInRange;
     public GameObject player;
+    public GameObject alert;
     private MonoBehaviour playerMovement;
 
     void Start() {
@@ -18,7 +19,7 @@ public class Sign : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && playerInRange) {
+        if (Input.GetButtonDown("Submit") && playerInRange) {
             if (db.activeInHierarchy) {
                 db.SetActive(false);
                 playerMovement.enabled = true;
@@ -27,6 +28,9 @@ public class Sign : MonoBehaviour
                 text.text = dialogue; 
                 playerMovement.enabled = false;
             }
+        } else if (Input.GetButtonDown("Cancel") && (db.activeInHierarchy)) {
+            db.SetActive(false);
+            playerMovement.enabled = true;
         }
            
     }
@@ -34,6 +38,7 @@ public class Sign : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other){
         if (other.CompareTag("Player")){
             playerInRange = true;
+            alert.SetActive(true);
         }
     }
 
@@ -42,6 +47,7 @@ public class Sign : MonoBehaviour
             playerInRange = false;
             db.SetActive(false);
             playerMovement.enabled = true;
+            alert.SetActive(false);
         }
     }
 }
